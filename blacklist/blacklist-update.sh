@@ -2,8 +2,8 @@
 
 get_script_dir() { case "${0}" in *"/"*) d="${0%/*}";; *) d=.;; esac; CDPATH="" cd -- "${d}" && pwd -P; }
 try_lib_at() { f="${1}/libshell.sh"; [ -r "${f}" ] && . "${f}" 2>/dev/null; }; _THIS_DIR_="$(get_script_dir)"
-if ! try_lib_at "${_THIS_DIR_}/.."; then if ! try_lib_at "${_THIS_DIR_}/../common"; then
-if ! try_lib_at "${_THIS_DIR_}"; then echo "Error loading library."; exit 1; fi; fi; fi
+try_lib_at "${_THIS_DIR_}" || try_lib_at "${_THIS_DIR_}/common" || try_lib_at "${_THIS_DIR_}/.." || \
+try_lib_at "${_THIS_DIR_}/../common" || { echo "Error loading library."; exit 1; }
 
 
 # Atomically update iptables/ip6tables-nft blacklist sets from remote sources

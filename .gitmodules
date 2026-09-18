@@ -1,0 +1,8 @@
+[submodule "common"]
+	path = common
+	url = https://gist.github.com/Ykidia/c8c590a8204eeea68c0aac516ce73d0e
+	branch = main
+[submodule "socks"]
+	path = socks
+	url = https://gist.github.com/Ykidia/26987df3cba0b4df511d6773836d1be8
+	branch = main
