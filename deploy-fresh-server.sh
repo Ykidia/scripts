@@ -1,8 +1,9 @@
 #!/bin/bash
 
-apt install -y aptitude cron htop mc systemd-zram-generator zstd gnutls-bin sslh sshfs iptables-persistent ipset dnsmasq certbot haproxy \
-wget curl net-tools dnsutils cmake build-essential dh-autoreconf golang git pkg-config \
-gettext libjudy-dev libncurses-dev libsodium-dev libssl-dev zlib1g-dev libreadline-dev
+apt install -y aptitude cron htop mc systemd-zram-generator zstd gnutls-bin irqbalance \
+    sslh sshfs iptables-persistent ipset net-tools dnsutils dnsmasq certbot haproxy wget curl \
+    git cmake build-essential dh-autoreconf golang pkg-config gettext \
+    libjudy-dev libncurses-dev libsodium-dev libssl-dev zlib1g-dev libreadline-dev
 
 mkdir /root/sources
 mkdir /mnt/sshfs
@@ -17,7 +18,7 @@ mkdir /mnt/sshfs
 git clone https://github.com/Ykidia/scripts.git /opt/scripts
 
 # Install services using /opt/scripts/*/install-*.sh
-cd /opt/scripts && git pull --recurse-submodules && git submodule update --remote --recursive
+/opt/scripts/update.sh
 /opt/scripts/install-all.sh
 
 # Install cron tasks in /var/spool/cron/crontabs
