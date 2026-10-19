@@ -1,5 +1,6 @@
 #!/bin/bash
 
+apt update
 apt install -y aptitude cron htop mc systemd-zram-generator zstd gnutls-bin irqbalance \
     sslh sshfs iptables-persistent ipset net-tools dnsutils dnsmasq certbot haproxy wget curl \
     git cmake build-essential dh-autoreconf golang pkg-config gettext \
