@@ -1,10 +1,29 @@
 #!/bin/sh
 
+
 _SERVICE_NAME_="vpnserver"
 _SERVICE_NAME_CAP_="VPN server"
 _SERVICE_EXEC_="vpnserver"
 _SERVICE_TITLE_="${_SERVICE_NAME_CAP_}"
 _SERVICE_DIR_="/opt/${_SERVICE_NAME_}"
+
+
+notfound_tools=
+for needed_tool in cmake make git systemctl; do
+    if ! "${needed_tool}" --help >/dev/null 2>&1; then
+        case "${notfound_tools}" in
+        "")
+            notfound_tools="${needed_tool}";;
+        *)
+            notfound_tools="${notfound_tools} ${needed_tool}";;
+        esac
+    fi
+done
+case "${notfound_tools}" in "");; *)
+    echo "Needed tool(s) NOT found or invalid: ${notfound_tools}, exiting."
+    exit 1
+    ;;
+esac
 
 mkdir -p ~/sources/SoftEtherVPN
 cd ~/sources/SoftEtherVPN

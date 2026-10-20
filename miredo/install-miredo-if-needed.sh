@@ -65,6 +65,23 @@ esac
 #
 # Build the service
 #
+notfound_tools=
+for needed_tool in make git systemctl; do
+    if ! "${needed_tool}" --help >/dev/null 2>&1; then
+        case "${notfound_tools}" in
+        "")
+            notfound_tools="${needed_tool}";;
+        *)
+            notfound_tools="${notfound_tools} ${needed_tool}";;
+        esac
+    fi
+done
+case "${notfound_tools}" in "");; *)
+    echo "Needed tool(s) NOT found or invalid: ${notfound_tools}, exiting."
+    exit 1
+    ;;
+esac
+
 _SERVICE_DIR_="/opt/${_SERVICE_NAME_}"
 mkdir -p "${_SERVICE_DIR_}"
 
