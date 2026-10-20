@@ -271,7 +271,7 @@ EOF
         kill ${_SERVICE_PROCS_} >>"${_INSTALL_LOG_}" 2>&1
         ;;
     esac
-    cat >"/etc/init.d/${_SERVICE_NAME_}" <<EOF
+    cat >"${_SERVICE_DIR_}/${_SERVICE_NAME_}.init" <<EOF
 #!/bin/sh /etc/rc.common
 #
 
@@ -308,7 +308,9 @@ restart()
     rc_procd start_service
 }
 EOF
-    chmod +x "/etc/init.d/${_SERVICE_NAME_}"
+    chmod +x "${_SERVICE_DIR_}/${_SERVICE_NAME_}.init"
+    mkdir -p /etc/init.d
+    ln -sf "${_SERVICE_DIR_}/${_SERVICE_NAME_}.init" "/etc/init.d/${_SERVICE_NAME_}"
     /etc/init.d/${_SERVICE_NAME_} enable
     case "${_SERVICE_PROCS_}" in "");; *)
         /etc/init.d/${_SERVICE_NAME_} start

@@ -18,7 +18,8 @@ SOCKS5_ADDR="127.0.0.1"
 SOCKS5_PORT="10890"
 LISTEN_ADDR="0.0.0.0"
 LISTEN_PORT="10898"
-EXTRA_ARGS="-R -4"
+LIMIT_NOFILE=65535
+EXTRA_ARGS="-R -4 -j $(nproc 2>/dev/null || echo 1) -n ${LIMIT_NOFILE} -r -w -W"
 
 # Line Feed character, used to append newlines without raw line breaks in code.
 _LF_=$(printf '\n')
@@ -295,7 +296,7 @@ exec "${_SERVICE_DIR_}/${_SERVICE_EXEC_}" \\
     ${_OLD_EXTRA_ARGS_}
 EOF
     chmod +x "${_RUN_SCRIPT_}"
-    echo "Created/Updated run script: ${_RUN_SCRIPT_}"
+    echo "Created/updated run script: ${_RUN_SCRIPT_}"
 else
     echo "Keeping existing run script: ${_RUN_SCRIPT_}"
 fi
@@ -318,7 +319,7 @@ Type=simple
 ExecStart=${_RUN_SCRIPT_}
 Restart=on-failure
 RestartSec=5s
-LimitNOFILE=65535
+LimitNOFILE=${LIMIT_NOFILE}
 
 [Install]
 WantedBy=multi-user.target
@@ -350,7 +351,6 @@ start_service() {
 }
 EOF
     chmod +x "${_SERVICE_DIR_}/${_SERVICE_NAME_}.init"
-
     case "${_INIT_SYSTEM_}" in
     "procd")
         mkdir -p /etc/init.d
