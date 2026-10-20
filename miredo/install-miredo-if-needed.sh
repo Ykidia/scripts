@@ -90,8 +90,8 @@ _BUILD_DIR_="${_USER_HOME_}/sources/${_COMMON_NAME_}"
 if mkdir -p "${_BUILD_DIR_}" && cd "${_BUILD_DIR_}"; then
 #    rm -rf ./* ./.*
     git clone https://github.com/Ykidia/${_COMMON_NAME_}.git .
-    git pull
-    git submodule update --init
+    git pull --recurse-submodules
+    git submodule update --init --remote --recursive
     if mkdir -p bin && cd bin; then
         _BUILD_DIR_="${_BUILD_DIR_}/bin"
         ../autogen.sh && ../configure --prefix=/ --bindir=${_SERVICE_DIR_} --libexecdir=/opt --sysconfdir=/opt \

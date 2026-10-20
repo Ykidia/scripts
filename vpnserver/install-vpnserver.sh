@@ -28,8 +28,8 @@ esac
 mkdir -p ~/sources/SoftEtherVPN
 cd ~/sources/SoftEtherVPN
 git clone https://github.com/SoftEtherVPN/SoftEtherVPN.git .
-git pull
-git submodule update --init
+git pull --recurse-submodules
+git submodule update --init --remote --recursive
 rm -rf bin
 mkdir -p bin
 cd bin

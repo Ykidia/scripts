@@ -57,11 +57,28 @@ esac
 #
 # Download and build
 #
+notfound_tools=
+for needed_tool in make git systemctl; do
+    if ! "${needed_tool}" --help >/dev/null 2>&1; then
+        case "${notfound_tools}" in
+        "")
+            notfound_tools="${needed_tool}";;
+        *)
+            notfound_tools="${notfound_tools} ${needed_tool}";;
+        esac
+    fi
+done
+case "${notfound_tools}" in "");; *)
+    echo "Needed tool(s) NOT found or invalid: ${notfound_tools}, exiting."
+    exit 1
+    ;;
+esac
+
 mkdir -p ~/sources/telego
 cd ~/sources/telego
 git clone https://github.com/Scratch-net/telego.git .
-git pull
-git submodule update --init
+git pull --recurse-submodules
+git submodule update --init --remote --recursive
 make clean
 make build
 
