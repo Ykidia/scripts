@@ -30,7 +30,7 @@ case "${os_is_openwrt}" in
     ;;
 esac
 mkdir -p "${_SERVICE_DIR_}"
-: >"${_INSTALL_LOG_}"
+: >"${_INSTALL_LOG_}" 2>/dev/null
 
 
 #
@@ -308,6 +308,7 @@ restart()
     rc_procd start_service
 }
 EOF
+    chmod +x "/etc/init.d/${_SERVICE_NAME_}"
     /etc/init.d/${_SERVICE_NAME_} enable
     case "${_SERVICE_PROCS_}" in "");; *)
         /etc/init.d/${_SERVICE_NAME_} start
