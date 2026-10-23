@@ -250,7 +250,12 @@ tsi_load()
 #                        ${tsi_download} "${downurl}/${downfile}" |while IFS= read -r cidrline; do
                         get_content "${downurl}/${downfile}" |while IFS= read -r cidrline; do
                             if check_ipv4_or_domain "${cidrline%%#*}"; then
-                                echo "${result_ipaddr}" >>"${tsi_netsetfile_temp}"
+                                case ${result_subnet} in
+                                "")
+                                    echo "${result_ipaddr}" >>"${tsi_netsetfile_temp}";;
+                                *)
+                                    echo "${result_ipaddr}/${result_subnet}" >>"${tsi_netsetfile_temp}";;
+                                esac
                             else
                                 case "${result_domain}" in "");; *)
                                     echo "${result_domain}" >>"${tsi_namesetfile_temp}";;
@@ -331,9 +336,11 @@ tsi_load()
 
     # Generate IPs/subnets set file and save it if already saved is different
     tsi_setfile_changed=0
-    if ! cat "${tsi_netsetfile_temp}" 2>/dev/null |diff -b -B "${tsi_netsetfile}" - >/dev/null; then
-        cp -f "${tsi_netsetfile_temp}" "${tsi_netsetfile}" >/dev/null 2>&1
-        tsi_setfile_changed=1
+    if [ -s "${tsi_netsetfile_temp}" ]; then
+        if ! cat "${tsi_netsetfile_temp}" 2>/dev/null |diff -b -B "${tsi_netsetfile}" - >/dev/null; then
+            cp -f "${tsi_netsetfile_temp}" "${tsi_netsetfile}" >/dev/null 2>&1
+            tsi_setfile_changed=1
+        fi
     fi
     rm -f "${tsi_netsetfile_temp}" >/dev/null 2>&1
     if [ -s "${tsi_netsetfile}" -a ${tsi_setfile_changed} -ne 0 -a ${tsi_update_only} -eq 0 ]; then
