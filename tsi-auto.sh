@@ -311,14 +311,14 @@ tsi_load()
     cp -f "${tsi_dnscfgfile}" "${tsi_dnscfgfile_temp}" >/dev/null 2>&1
     tsi_config_set "tsi_manual" 7 "${tsi_namesetfile_static}"
     case ${domains_total} in 0);; *)
-        logme "Total ${domains_total} manually specified domain(s) processed.";;
+        logme "Total ${domains_total} manually specified domains processed.";;
     esac
     case ${namelinescnt} in 0);; *)
         tsi_tmpnamesetfile_sorted="$(mktemp)"
         sort -u "${tsi_namesetfile_temp}" >"${tsi_tmpnamesetfile_sorted}"
         tsi_config_set "tsi_auto" 11 "${tsi_tmpnamesetfile_sorted}"
         case ${domains_total} in 0);; *)
-            logme "Total ${domains_total} auto downloaded domain(s) processed.";;
+            logme "Total ${domains_total} auto downloaded domains processed.";;
         esac
         rm -f "${tsi_tmpnamesetfile_sorted}" >/dev/null 2>&1
         ;;
@@ -327,6 +327,7 @@ tsi_load()
     tsi_dnscfgfile_changed=0
     if ! cat "${tsi_dnscfgfile_temp}" 2>/dev/null |diff -b -B "${tsi_dnscfgfile}" - >/dev/null; then
         cp -f "${tsi_dnscfgfile_temp}" "${tsi_dnscfgfile}" >/dev/null 2>&1
+        logme "Domains set(s) was changed, ${tsi_dns} extra configuration file was updated: ${tsi_dnscfgfile}."
         tsi_dnscfgfile_changed=1
     fi
     rm -f "${tsi_dnscfgfile_temp}" >/dev/null 2>&1
@@ -337,8 +338,11 @@ tsi_load()
     # Generate IPs/subnets set file and save it if already saved is different
     tsi_setfile_changed=0
     if [ -s "${tsi_netsetfile_temp}" ]; then
+        count_file_lines "${tsi_netsetfile_temp}" "nets_total"
+        logme "Total ${nets_total} auto downloaded IPs/subnets processed."
         if ! cat "${tsi_netsetfile_temp}" 2>/dev/null |diff -b -B "${tsi_netsetfile}" - >/dev/null; then
             cp -f "${tsi_netsetfile_temp}" "${tsi_netsetfile}" >/dev/null 2>&1
+            logme "IPs/subnets set was changed, set file was updated: ${tsi_netsetfile}."
             tsi_setfile_changed=1
         fi
     fi

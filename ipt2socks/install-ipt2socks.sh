@@ -145,7 +145,7 @@ map_arch_to_asset() {
     *mips64*)
         echo "ipt2socks@mips64-linux-musl@mips64";;
     *mipsel*)
-        echo "ipt2socks@mipsel-linux-musl@mips32";;
+        echo "ipt2socks@mipsel-linux-musl@mips32+soft_float";;
     *mips*)
         echo "ipt2socks@mips-linux-musl@mips32";;
     *armv7*|*arm_cortex*)
