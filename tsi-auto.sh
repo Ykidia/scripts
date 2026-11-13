@@ -248,7 +248,7 @@ tsi_load()
                         inet_waitconnection
                         set_led on sub
 #                        ${tsi_download} "${downurl}/${downfile}" |while IFS= read -r cidrline; do
-                        get_content "${downurl}/${downfile}" |while IFS= read -r cidrline; do
+                        while IFS= read -r cidrline; do
                             if check_ipv4_or_domain "${cidrline%%#*}"; then
                                 case ${result_subnet} in
                                 "")
@@ -261,7 +261,9 @@ tsi_load()
                                     echo "${result_domain}" >>"${tsi_namesetfile_temp}";;
                                 esac
                             fi
-                        done
+                        done <<EOF
+$(get_content "${downurl}/${downfile}")
+EOF
                         iplinescnt=$(sort -u "${tsi_netsetfile_temp}" |wc -l)
                         namelinescnt=$(sort -u "${tsi_namesetfile_temp}" |wc -l)
                         totallinescnt=$((iplinescnt + namelinescnt))
